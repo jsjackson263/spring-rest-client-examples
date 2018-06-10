@@ -34,7 +34,7 @@ public class UserController {
 	}
 	
 	
-	@PostMapping("/users")
+	/*@PostMapping("/users")
 	public String formPost(Model model, ServerWebExchange serverWebExchange ) {
 		
 		MultiValueMap<String, String> map = serverWebExchange.getFormData().block();
@@ -52,7 +52,25 @@ public class UserController {
 		
 		return "userlist";
 		
+	}*/
+	
+	
+	/* the Reactive way.
+	 *  - we're not going to see the "limit" anymore
+	 *  - Thymeleaf is smart enough to know we're going to bind a reactive type
+	 */
+	@PostMapping("/users")
+	public String formPost(Model model, ServerWebExchange serverWebExchange ) {
+		
+		model.addAttribute("users", apiService.getUsers(serverWebExchange
+				.getFormData()
+				.map(data -> new Integer(data.getFirst("limit")))));
+		
+		return "userlist";
+		
 	}
 	
+	
+	//XXX: Fix problem with templates - bootstrap styling not being applied
 
 }
